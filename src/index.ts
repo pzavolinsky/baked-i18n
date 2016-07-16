@@ -1,5 +1,22 @@
-import { Translate } from './types';
-import { extract, embed } from './parser';
+import { Translate, Node, TranslatedNode, isMatch } from './types';
+import { extract } from './parser';
 
-export default (translate:Translate, source:string):string =>
-  embed(source, extract(source).map(translate));
+const translateNodes = (translate:Translate, nodes:Node[]):TranslatedNode[] =>
+  nodes.map(n =>
+    isMatch(n)
+    ? translate(n)
+    : n
+  );
+
+export const translateMany = (
+  translate:Translate[],
+  source:string
+):string[] => {
+  const nodes = extract(source);
+  return translate.map(t =>
+    translateNodes(t, nodes).map(n => n.text).join('')
+  );
+};
+
+export const translateOne = (translate:Translate, source:string):string =>
+  translateMany([translate], source)[0];
