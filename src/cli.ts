@@ -17,7 +17,7 @@ if (args.length < 3) {
 
 const sourcePath = args[1];
 const localePaths = args.slice(2);
-const localeExpr = /.*(?:culture.|[/\\]|^)(.*)(?:.locale)?\.json$/;
+const localeExpr = /.*([a-z]{2}-[A-Z]{2}).*\.json$/;
 const translations = bake({
   sourcePath,
   localePaths
