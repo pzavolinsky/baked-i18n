@@ -1,6 +1,6 @@
-import translate from './map-translation';
-import { translateMany } from './index';
-import { loadSource, loadLocale, saveTranslations } from './files';
+import { writeFileSync } from 'fs';
+import bake from './index';
+import { getTranslatedFileName } from './utils';
 
 const args = process.argv.slice(1);
 
@@ -15,12 +15,19 @@ if (args.length < 3) {
   process.exit(1);
 }
 
-const sourceFileName = args[1];
-const locales = args.slice(2);
-const localeExpr = /.*culture.(.*).locale\.json/;
+const sourcePath = args[1];
+const localePaths = args.slice(2);
+const localeExpr = /.*(?:culture.|[/\\]|^)(.*)(?:.locale)?\.json$/;
+const translations = bake({
+  sourcePath,
+  localePaths
+});
 
-const source = loadSource(sourceFileName);
-const translations = locales.map(l => translate(loadLocale(l)));
-const translatedSources = translateMany(translations, source);
+const write = (path:string, index:number) => {
+  writeFileSync(path, translations[index]);
+  console.log(`Generated ${path}`);
+};
 
-saveTranslations(sourceFileName, localeExpr, locales, translatedSources);
+localePaths
+  .map(getTranslatedFileName(localeExpr, sourcePath))
+  .forEach(write);

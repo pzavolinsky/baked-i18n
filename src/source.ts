@@ -1,8 +1,10 @@
-import { Node } from './types';
+import { readFileSync } from 'fs';
+import { Source, Node } from './types';
 
-export const extract = (s:string):Node[] => {
-  const findMatch = /_\('((?:[^']|\\')*)'\)/g;
-
+export const fromString = (
+  findMatch:RegExp,
+  s:string
+):Source => {
   const ret:Node[] = [];
 
   let start = 0;
@@ -20,3 +22,12 @@ export const extract = (s:string):Node[] => {
 
   return ret;
 };
+
+export const fromFile = (
+  findMatch:RegExp,
+  file:string
+):Source =>
+  fromString(
+    findMatch,
+    readFileSync(file, { encoding: 'utf8' })
+  );

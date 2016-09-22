@@ -19,10 +19,13 @@
   "files": [
     "./typings/index.d.ts",
     "./src/cli.ts",
-    "./src/files.ts",
     "./src/index.ts",
-    "./src/map-translation.ts",
-    "./src/parser.ts",
-    "./src/types.ts"
+    "./src/locale.ts",
+    "./src/options.ts",
+    "./src/output.ts",
+    "./src/source.ts",
+    "./src/translate.ts",
+    "./src/types.ts",
+    "./src/utils.ts"
   ]
 }
