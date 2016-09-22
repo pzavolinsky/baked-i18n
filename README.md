@@ -1,7 +1,9 @@
 baked-i18n
 ==========
 
-`bake-i18n` bakes static translations at compile-time. Given a `source` file, and one or more JSON translations, `bake-i18n` replaces instances of a translation function in `source` with the translations from every JSON file, producing translated versions of `source`.
+`bake-i18n` bakes static translations into at compile-time.
+
+Given a `source` file, and one or more JSON translations, `bake-i18n` replaces instances of a translation function in `source` with the translations from every JSON file, producing translated versions of `source`.
 
 Installation
 ------------
@@ -14,7 +16,7 @@ Usage
 -----
 
 ```shell
-./node_modules/.bin/bake-i18n path/to/file.js path/to/locale.json ...
+./node_modules/.bin/bake-i18n path/to/source path/to/locale.json ...
 ```
 
 or:
@@ -22,13 +24,13 @@ or:
 ```ts
 import bake from 'baked-i18n';
 const translations = bake({
-  sourcePath: 'path/to/file.js',
+  sourcePath: 'path/to/source',
   localePaths: ['path/to/en-US.json', 'path/to/es-AR.json']
 });
 
 // translations = [
-//   '...', // ... is 'file.js' translated to en-US
-//   '...'  // ... is 'file.js' translated to es-AR
+//   '...', // ... is 'source' translated to en-US
+//   '...'  // ... is 'source' translated to es-AR
 // ]
 ```
 
@@ -38,7 +40,7 @@ For example, given a `file.js`:
 console.log(_('Hello, World'));
 ```
 
-And a `es-AR.json`:
+And `es-AR.json`:
 
 ```js
 {
