@@ -65,6 +65,9 @@ CLI Options
 
 ```shell
 $ ./bin/bake-i18n -h
+```
+
+```
 
   Usage: bake-i18n [options] source locales...
 
