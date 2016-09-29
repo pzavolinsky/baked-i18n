@@ -28,6 +28,15 @@ export const isConst = (node:Node|TranslatedNode):node is Const =>
 export const isMatch = <M extends Match>(node:Node|TranslatedNode):node is M =>
   !!(node as M).key;
 
-export interface Translate {
-  (m:Match):TranslatedMatch
+export interface Locale {
+  apply: (m:Match) => TranslatedMatch
+  nodes: { [key:string]:string }
+}
+
+// Baked results
+export interface BakedResult {
+  nodes:   Translation
+  text:    string
+  missing: string[]
+  extra:   string[]
 }

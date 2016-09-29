@@ -59,3 +59,35 @@ Generates `file-es-AR.js`:
 ```js
 console.log("Hola, Mundo");
 ```
+
+CLI Options
+-----------
+
+```shell
+$ ./bin/bake-i18n -h
+
+  Usage: bake-i18n [options] source locales...
+
+    source:    the source file to translate
+
+    locales:   one or more JSON translation files
+
+  Input Options:
+    --culture REGEX     The JS regex that will be used to extract the culture
+                        information from the locale path. The first capture of
+                        this regex should match the culture.
+                          (defaults to: .*([a-z]{2}-[A-Z]{2}).*.json$)
+
+    --translate NAME    The name of the translation function used in source.
+                          (defaults to '_')
+
+  Output Options:
+    --out DIR, -o       Output directory (defaults to source's directory)
+    --silent, -s        Do not print the generated file names unless they have
+                        warnings
+    --fail              Exit with -1 if the process ended with warnings
+    --warn-all, -w      The same as --warn-missing and --warn-extra
+    --warn-extra        Warn when the locale file contains unused translations
+    --warn-missing      Warn when a translation required by source is missing in
+                        the locale file
+```

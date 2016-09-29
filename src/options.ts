@@ -29,7 +29,7 @@ interface FileLocales {
 type LocalesOptions = ObjectLocales | StringLocales | FileLocales;
 
 interface ProcessOptions {
-  translateFunction?: RegExp
+  translateFunction?: string
 }
 
 export type Options
@@ -41,11 +41,11 @@ export type Options
 const isFileSource = (options:SourceOptions):options is FileSource =>
   !!(options as FileSource).sourcePath;
 
-const getTranslateFunction = (options:ProcessOptions):RegExp =>
-  options.translateFunction || /_\('((?:[^']|\\')*)'\)/g;
+const getTranslateFunction = (options:ProcessOptions):string =>
+  options.translateFunction || '_';
 
 export const getSourceForRegEx = (
-  translateFunction:RegExp,
+  translateFunction:string,
   options:SourceOptions
 ) =>
   isFileSource(options)

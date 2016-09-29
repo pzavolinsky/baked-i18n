@@ -1,8 +1,8 @@
-import { Source, Translation, Translate, isMatch } from './types';
+import { Source, Translation, Locale, isMatch } from './types';
 
-export const translate = (translate:Translate, source:Source):Translation =>
+export const translate = (locale:Locale, source:Source):Translation =>
   source.map(n =>
     isMatch(n)
-    ? translate(n)
+    ? locale.apply(n)
     : n
   );

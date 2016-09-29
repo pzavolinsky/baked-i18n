@@ -1,21 +1,23 @@
 import { readFileSync } from 'fs';
-import { Match, TranslatedMatch, Translate } from './types';
+import { Match, TranslatedMatch, Locale } from './types';
 
 export interface Translation {
   [index:string]:string
 }
 
-export const fromObject = (translation:Translation):Translate =>
-  ({ key }:Match):TranslatedMatch => ({
+export const fromObject = (nodes:Translation):Locale => ({
+  nodes,
+  apply: ({ key }:Match):TranslatedMatch => ({
     key,
-    text:  `"${(translation[key] || key).replace(/"/g, '\\"')}"`,
-    found: !!translation[key]
-  });
+    text:  `"${(nodes[key] || key).replace(/"/g, '\\"')}"`,
+    found: !!nodes[key]
+  })
+});
 
-export const fromString = (s:string):Translate =>
+export const fromString = (s:string):Locale =>
   fromObject(JSON.parse(s.trim()));
 
-export const fromFile = (file:string):Translate => {
+export const fromFile = (file:string):Locale => {
   const content = readFileSync(file, { encoding: 'utf8' });
   try {
     return fromString(content);

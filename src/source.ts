@@ -1,16 +1,20 @@
 import { readFileSync } from 'fs';
 import { Source, Node } from './types';
 
+const args = `_\(('(?:[^']|\\')*'|"(?:[^']|\\')*")\)`;
+
 export const fromString = (
-  findMatch:RegExp,
+  fnName:string,
   s:string
 ):Source => {
   const ret:Node[] = [];
 
   let start = 0;
 
+  const re = new RegExp(`${fnName}${args}`, 'g');
+
   while (true) {
-    const m = findMatch.exec(s);
+    const m = re.exec(s);
     if (!m) {
       ret.push({ text: s.slice(start) });
       break;
@@ -24,10 +28,10 @@ export const fromString = (
 };
 
 export const fromFile = (
-  findMatch:RegExp,
+  fnName:string,
   file:string
 ):Source =>
   fromString(
-    findMatch,
+    fnName,
     readFileSync(file, { encoding: 'utf8' })
   );
