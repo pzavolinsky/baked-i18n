@@ -1,6 +1,6 @@
 {
   "name": "baked-i18n",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "bake static translations at compile-time",
   "main": "lib/index.js",
   "repository": {
@@ -22,9 +22,11 @@
   },
   "homepage": "https://github.com/pzavolinsky/baked-i18n",
   "scripts": {
-    "build": "rm ./lib/*.js && ./node_modules/.bin/tsc"
+    "build": "rm ./lib/*.js && ./node_modules/.bin/tsc",
+    "test": "./node_modules/.bin/cucumberjs -S -f progress"
   },
   "devDependencies": {
+    "cucumber": "^1.3.1",
     "pofile": "^1.0.2",
     "typescript": "^2.0.3",
     "typings": "^1.4.0"

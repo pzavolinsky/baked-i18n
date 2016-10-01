@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
 import { Match, TranslatedMatch, Locale } from './types';
+import { readFile } from './utils';
 
 export interface Translation {
   [index:string]:string
@@ -18,7 +18,7 @@ export const fromString = (s:string):Locale =>
   fromObject(JSON.parse(s.trim()));
 
 export const fromFile = (file:string):Locale => {
-  const content = readFileSync(file, { encoding: 'utf8' });
+  const content = readFile(file);
   try {
     return fromString(content);
   } catch (e) {

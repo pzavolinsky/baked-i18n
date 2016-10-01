@@ -1,0 +1,6 @@
+src
+features
+typings
+*.json
+*.tgz
+.npmignore

@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs';
 import { Source, Node } from './types';
+import { readFile } from './utils';
 
-const args = `_\(('(?:[^']|\\')*'|"(?:[^']|\\')*")\)`;
+const args = `\\(('(?:[^']|\\\\')*'|"(?:[^']|\\\\')*")\\)`;
 
 export const fromString = (
   fnName:string,
@@ -21,7 +21,7 @@ export const fromString = (
     }
     if (start != m.index) ret.push({ text: s.substring(start, m.index) });
     start = m.index + m[0].length;
-    ret.push({ key: m[1] });
+    ret.push({ key: m[1].substring(1, m[1].length - 1) });
   }
 
   return ret;
@@ -33,5 +33,5 @@ export const fromFile = (
 ):Source =>
   fromString(
     fnName,
-    readFileSync(file, { encoding: 'utf8' })
+    readFile(file)
   );

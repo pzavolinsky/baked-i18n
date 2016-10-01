@@ -40,14 +40,14 @@ const showUsage = () => {
   `);
   process.exit(1);
 };
-
+// tslint:disable:no-string-literal
 const [sourcePath, ...localePaths] = args._;
+const help        = args['help'];
 const warnAll     = args['warn-all'];
 const warnExtra   = warnAll || args['warn-extra'];
 const warnMissing = warnAll || args['warn-missing'];
 const { fail, silent, out } = args;
-const help        = args['help']; // tslint:disable-line
-const localeRe    = new RegExp(args['locale-re'] || defaultLocaleRe);
+const localeRe    = new RegExp(args['culture'] || defaultLocaleRe);
 
 if (!sourcePath
   || !localePaths
@@ -56,7 +56,8 @@ if (!sourcePath
 
 const results = advancedBake({
   sourcePath,
-  localePaths
+  localePaths,
+  translateFunction: args['translate']
 });
 
 const write = (path:string, index:number):boolean => {
