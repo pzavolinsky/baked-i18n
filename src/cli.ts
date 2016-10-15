@@ -1,10 +1,15 @@
 import { writeFileSync } from 'fs';
+import { basename } from 'path';
 import * as parseArgs from 'minimist';
 import { advancedBake } from './index';
 import { getTranslatedFileName } from './utils';
+import { addMissing, removeExtra, toFile } from './locale';
 
 const args = parseArgs(process.argv.slice(2), {
-  boolean: ['warn-extra', 'warn-missing', 'warn-all', 'fail', 'help', 'silent'],
+  boolean: [
+    'warn-extra', 'warn-missing', 'warn-all',
+    'fix-extra', 'fix-missing', 'fix-alll',
+    'fail', 'help', 'silent'],
   string: ['out', 'culture', 'translate'],
   alias: { w: 'warn-all', h: 'help', s: 'silent', o: 'out' }
 });
@@ -37,6 +42,17 @@ const showUsage = () => {
     --warn-extra        Warn when the locale file contains unused translations
     --warn-missing      Warn when a translation required by source is missing in
                         the locale file
+
+  Fixing locale options:
+    Note: fix options will modify the locale files in place, possible removing
+    existing translations. Make sure those files are under source control or
+    you have a backup before using fix options.
+
+    --fix-all           The same as --fix-missing and --fix-extra
+    --fix-extra         Remove translations from locale files that are not
+                        required by the source file
+    --fix-missing       Add TODO translations to locale files that are required
+                        by the source file and not present in the locale file
   `);
   process.exit(1);
 };
@@ -46,6 +62,11 @@ const help        = args['help'];
 const warnAll     = args['warn-all'];
 const warnExtra   = warnAll || args['warn-extra'];
 const warnMissing = warnAll || args['warn-missing'];
+
+const fixAll      = args['fix-all'];
+const fixExtra    = fixAll || args['fix-extra'];
+const fixMissing  = fixAll || args['fix-missing'];
+
 const { fail, silent, out } = args;
 const localeRe    = new RegExp(args['culture'] || defaultLocaleRe);
 
@@ -60,19 +81,35 @@ const results = advancedBake({
   translateFunction: args['translate']
 });
 
+const warn = <T>(fn:(i:T) => string, items:T[]):void =>
+  items.forEach(i => console.warn(`[WARN] ${fn(i)}`));
+
 const write = (path:string, index:number):boolean => {
   const result = results[index];
-  writeFileSync(path, result.text);
+
   const succeeded = !result.extra.length && !result.missing.length;
-  if (!silent || !succeeded && (warnExtra || warnMissing)) {
-    console.log(`Generated ${path}`);
+
+  const fixes = [
+    fixExtra   ? removeExtra(result.extra)  : undefined,
+    fixMissing ? addMissing(result.missing) : undefined
+  ].filter(fn => !!fn);
+
+  if (!succeeded && fixes.length) {
+    const localePath = localePaths[index];
+    const fixedLocale = fixes.reduce((l, fn) => fn ? fn(l) : l, result.locale);
+    toFile(localePath, fixedLocale);
+    if (!silent) console.log(`Fixed ${localePath}`);
+    return false;
   }
-  if (warnExtra && result.extra.length) {
-    result.extra.forEach(k => console.warn(`[WARN] Extra key: ${k}`));
+
+  writeFileSync(path, result.text);
+  if (!silent) {
+    console.log(`Generated ${path}${succeeded ? '' : ' (with warnings)'}`);
   }
-  if (warnMissing && result.missing.length) {
-    result.missing.forEach(k => console.warn(`[WARN] Missing key: ${k}`));
-  }
+
+  const base = basename(path);
+  if (warnExtra) warn(k => `${base}: Extra key: ${k}`, result.extra);
+  if (warnMissing) warn(k => `${base}: Missing key: ${k}`, result.missing);
 
   return succeeded;
 };

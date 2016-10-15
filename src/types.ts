@@ -36,6 +36,7 @@ export interface Locale {
 // Baked results
 export interface BakedResult {
   nodes:   Translation
+  locale:  Locale
   text:    string
   missing: string[]
   extra:   string[]

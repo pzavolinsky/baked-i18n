@@ -147,6 +147,20 @@ Did you notice that your translation files get out-of-sync annoyingly fast? For 
 
   * `--fail`: exit with -1 if the process ended with warnings. This is useful to fail a build step if the translation files are out-of-sync.
 
+### Fix your translation files
+
+Ok, so the the translations are out-of-sync, how can we fix them? To some extent `bake-i18n` can do all the heavy lifting for you with the following options:
+
+  * `--fix-extra`: remove all keys from the translation files that are not required by the source.
+  > *NOTE*: this option will modify the locale files in place, possible removing existing translations. Make sure those files are under source control or you have a backup just in case.
+
+  For example, if the translation file includes a `some key` translation but source does not include `_('some key')`, then `some key` will be removed from the translation file.
+
+  * `--fix-missing`: add *TODO* translations to the translation files for every key in source that is not present in the translation file.
+
+  For example, if the source includes `_('some key')` and the translation file does not include a `some key` translation then a `some key => '@@@@ TODO @@@@'` translation will be added to the translation file.
+
+  * `--fix-all`: is an alias for `--fix-missing --fix-extra`.
 
 CLI Options
 -----------
@@ -181,4 +195,15 @@ $ ./bin/bake-i18n -h
     --warn-extra        Warn when the locale file contains unused translations
     --warn-missing      Warn when a translation required by source is missing in
                         the locale file
+
+  Fixing locale options:
+    Note: fix options will modify the locale files in place, possible removing
+    existing translations. Make sure those files are under source control or
+    you have a backup before using fix options.
+
+    --fix-all           The same as --fix-missing and --fix-extra
+    --fix-extra         Remove translations from locale files that are not
+                        required by the source file
+    --fix-missing       Add TODO translations to locale files that are required
+                        by the source file and not present in the locale file
 ```

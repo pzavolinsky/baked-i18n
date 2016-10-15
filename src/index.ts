@@ -15,6 +15,7 @@ const processLocale = (source:Source, sourceKeys:SourceKeys) =>
     return {
       nodes,
       text: toString(nodes),
+      locale,
       missing: nodes
         .filter(n => isMatch(n) && !n.found)
         .map(n => (n as Match).key),
