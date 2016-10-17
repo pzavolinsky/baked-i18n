@@ -8,7 +8,7 @@ import { addMissing, removeExtra, toFile } from './locale';
 const args = parseArgs(process.argv.slice(2), {
   boolean: [
     'warn-extra', 'warn-missing', 'warn-all',
-    'fix-extra', 'fix-missing', 'fix-alll',
+    'fix-extra', 'fix-missing', 'fix-all',
     'fail', 'help', 'silent'],
   string: ['out', 'culture', 'translate'],
   alias: { w: 'warn-all', h: 'help', s: 'silent', o: 'out' }
