@@ -31,14 +31,21 @@ export const fromFile = (file:string):Locale => {
 export const toFile = (file:string, locale:Locale):void =>
   writeFileSync(file, JSON.stringify(locale.nodes, undefined, 2));
 
+const getKeys = (locale:Locale, extra:string[] = []):string[] => {
+  const keys = Object.keys(locale.nodes).concat(extra);
+  keys.sort();
+  return keys;
+};
+
 export const removeExtra = (extra:string[]) => (locale:Locale):Locale =>
   extra.length
   ? fromObject(
-      Object
-      .keys(locale.nodes)
+      getKeys(locale)
       .filter(k => extra.indexOf(k) == -1)
       .reduce(
-        (o, k) => Object.assign(o, { [k]: locale.nodes[k] }) as Translation,
+        (o, k) => Object.assign(o, {
+          [k]: locale.nodes[k]
+        }) as Translation,
         {} as Translation
       )
     )
@@ -47,9 +54,12 @@ export const removeExtra = (extra:string[]) => (locale:Locale):Locale =>
 export const addMissing = (missing:string[]) => (locale:Locale):Locale =>
   missing.length
   ? fromObject(
-      missing.reduce(
-        (o, k) => Object.assign(o, { [k]: '@@@@ TODO @@@@' }) as Translation,
-        Object.assign({}, locale.nodes)
+      getKeys(locale, missing)
+      .reduce(
+        (o, k) => Object.assign(o, {
+          [k]: locale.nodes[k] || '@@@@ TODO @@@@'
+        }) as Translation,
+        {} as Translation
       )
     )
   : locale;

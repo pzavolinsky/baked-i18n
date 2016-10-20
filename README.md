@@ -162,11 +162,45 @@ Ok, so the the translations are out-of-sync, how can we fix them? To some extent
 
   * `--fix-all`: is an alias for `--fix-missing --fix-extra`.
 
+See a full example [here](https://github.com/pzavolinsky/baked-i18n/blob/master/features/fix_translations.feature).
+
+### Generate a translation template
+
+Picking up on the last item, running `bake-i18n` with `--fix-all` on an empty translation file will generate an template file that can be used to create new translations.
+
+For example, given a `file.js`:
+
+```js
+console.log(_('Hello, World'));
+```
+
+And an empty `es-AR.json`:
+
+```js
+{}
+```
+
+Running:
+
+```shell
+./node_modules/.bin/bake-i18n --fix-all file.js es-AR.json
+```
+
+Updates `es-AR.json`:
+
+```js
+{
+  "Hello, world": "@@@@ TODO @@@@"
+}
+```
+
+See a full example [here](https://github.com/pzavolinsky/baked-i18n/blob/master/features/generate_template.feature).
+
 CLI Options
 -----------
 
 ```shell
-$ ./bin/bake-i18n -h
+$ ./node_modules/.bin/bake-i18n -h
 ```
 
 ```
