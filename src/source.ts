@@ -1,27 +1,32 @@
 import { Source, Node } from './types';
 import { readFile } from './utils';
 
-const args = `\\(('(?:[^']|\\\\')*'|"(?:[^']|\\\\')*")\\)`;
+// tslint:disable-next-line:max-line-length
+const args = `\\(('(?:[^']|\\\\')*'|\\\\"(?:[^"]|\\\\\\\\")*\\\\"|"(?:[^"]|\\\\")*")\\)`;
 
 export const fromString = (
   fnName:string,
   s:string
 ):Source => {
   const ret:Node[] = [];
+  const re = new RegExp(`(?:[^a-zA-Z0-9_])(${fnName}${args})`, 'g');
 
   let start = 0;
 
-  const re = new RegExp(`${fnName}${args}`, 'g');
-
   while (true) {
     const m = re.exec(s);
+
     if (!m) {
       ret.push({ text: s.slice(start) });
       break;
     }
-    if (start != m.index) ret.push({ text: s.substring(start, m.index) });
-    start = m.index + m[0].length;
-    ret.push({ key: m[1].substring(1, m[1].length - 1) });
+
+    const index = m.index + m[0].indexOf(fnName);
+
+    if (start != index) ret.push({ text: s.substring(start, index) });
+    start = index + m[1].length;
+
+    ret.push({ key: getKeyFromMatched(m[2]) });
   }
 
   return ret;
@@ -35,3 +40,8 @@ export const fromFile = (
     fnName,
     readFile(file)
   );
+
+const getKeyFromMatched = (matched:string) => {
+  const cleanText = matched.replace(/\\+/g, '');
+  return cleanText.substring(1, cleanText.length - 1);
+};

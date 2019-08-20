@@ -4,7 +4,8 @@
     "module": "commonjs",
     "outDir": "./lib",
     "noImplicitAny": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "removeComments": true
   },
   "exclude": [
     "node_modules"
