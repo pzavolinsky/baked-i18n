@@ -7,10 +7,11 @@ Scenario: Generate a TODO translation template from a source file
       _('The Phantom Menace'),
       _('Attack of the Clones'),
       _('Revenge of the Sith'),
-      _('A New Hope'),
-      _('The Empire Strikes Back'),
-      _('Return of the Jedi'),
-      _('The Force Awakens')
+      _("A New Hope"),
+      _("The Empire \"Strikes\" Back"),
+      _('Return of the \'Jedi\''),
+      _('The Force Awakens'),
+      __('Where No Man Has Gone Before')
     ]
     """
   And a file es-AR.json with
@@ -26,9 +27,9 @@ Scenario: Generate a TODO translation template from a source file
     {
       "A New Hope": "@@@@ TODO @@@@",
       "Attack of the Clones": "@@@@ TODO @@@@",
-      "Return of the Jedi": "@@@@ TODO @@@@",
+      "Return of the 'Jedi'": "@@@@ TODO @@@@",
       "Revenge of the Sith": "@@@@ TODO @@@@",
-      "The Empire Strikes Back": "@@@@ TODO @@@@",
+      "The Empire \"Strikes\" Back": "@@@@ TODO @@@@",
       "The Force Awakens": "@@@@ TODO @@@@",
       "The Phantom Menace": "@@@@ TODO @@@@"
     }
